@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'idea' 
+
+jar {
+    baseName = 'TomcatValveSession'
+    version =  '1.0'
+}
+
+task fatJar(type: Jar) {
+    baseName = 'tomcatValveSession-all'
+    version =  '1.0'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+	compile group: 'redis.clients', name: 'jedis', version: '2.1.0'
+	compile group: 'log4j', name: 'log4j', version: '1.2.14'
+	compile group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '7.0.68'
+	compile group: 'org.apache.tomcat', name: 'tomcat-jasper', version: '7.0.68'
+	compile group: 'org.apache.tomcat', name: 'tomcat-juli', version: '7.0.68'
+	compile group: 'org.apache.tomcat', name: 'tomcat-api', version: '7.0.68'
+	compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '1.5.8'
+	compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+}
+
+task deployToTomcat(type: Copy) {
+    from fatJar.archivePath
+    into "/usr/share/tomcat7/lib"
+}
+
+task deployToVM(type: Copy) {
+    from fatJar.archivePath
+    into "/usr/local/tomcat7_vm_data/lib"
+}
