@@ -1,5 +1,4 @@
-# Load Banlancer Configuration
-## How to configure the Load Banlancer & Sticky Session & URL Rewrite in Apache Server
+## Load Banlancer Configuration in Apache Server 
 
 ### 1.	install apache server
 ```

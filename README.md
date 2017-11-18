@@ -7,6 +7,12 @@
 3. 既然已经用了负载均衡+session粘滞解决不同的web站点能够共享同一份session数据的问题，为什么还要本方案？在负载均衡+session粘滞的前提下，如果有一个web站点宕机或者在灰度发布的情况下重启，这个时候session被粘滞到这台服务器上的用户就会受到影响，会突然转到重新登录的页面，因为session由于服务器重启已经丢失。这个时候，如果我们提前对每一个web站点的session已经在远程Session备份服务器上提前做好备份，在每一个web站点处理携带sessionId的HTTP请求的时候，如果sessionId本地不存在，都去远程Session备份服务器查询，一旦查询到这个sessionId存在，就主动恢复session，这样问题就迎刃而解了。
 4. 大多数情况下，在负载均衡+session粘滞的场景下，一个用户的请求只会到达一个固定的web站点，无需同步访问远程远程Session备份服务器，只需用异步的方式往远程Session备份服务器备份自己的session数据。在极少数的情况下，譬如在web站点集群处于灰度发布或者部分宕机的情况下，原来粘滞的固定的web站点不再可用，负载均衡服务器把请求转向一个新的web站点，新的web站点根据这个请求上的sessionId去远程Session备份服务器取数据，并恢复session,这样用户在不知情的情况下被重新粘滞到另外一个web站点。
 
+### 负载均衡+session粘滞配置
+[看这里](https://github.com/artbite008/TomcatValveSession/blob/master/LoadBalancer.md)
+
+### 配置Session持久化
+修改DBFoundationSessionStore.java文件的getDataSource方法，连接改为指向独立的远程session备份服务器上的数据库。
+
 ### Tomcat集成
 
 1. 拷贝工程生成的tomcatValveSession-all.jar到每一个web站点的tomcat的lib目录,譬如/usr/share/tomcat7/lib
@@ -21,8 +27,6 @@
     </Context>
 ```
 
-### 负载均衡+session粘滞配置
 
 
-### Session持久化
 
