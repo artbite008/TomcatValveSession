@@ -1,4 +1,4 @@
-# TomcatValveSession - 基于Tomcat Valve机制的分布式Session管理方案
+## TomcatValveSession - 基于Tomcat Valve机制的分布式Session管理方案
 
 
 ### 应用场景
@@ -10,18 +10,19 @@
 ### Tomcat集成
 
 1. 拷贝工程生成的tomcatValveSession-all.jar到每一个web站点的tomcat的lib目录,譬如/usr/share/tomcat7/lib
-2. 在每一个web站点的tomcat的/conf/context.xml里配置：
+2. 在每一个web站点的tomcat的/conf/context.xml里做如下配置：
 ```
-	 <Context>
-    <WatchedResource>WEB-INF/web.xml</WatchedResource>
-    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
-    <Resources cachingAllowed="false"/>
-    <Valve className="org.apache.catalina.session.FoundationSessionManagerValve"/>
-    <Manager className="org.apache.catalina.session.FoundationSessionManager" /> 
-   </Context>
+    <Context>
+         <WatchedResource>WEB-INF/web.xml</WatchedResource>
+         <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+         <Resources cachingAllowed="false"/>
+         <Valve className="org.apache.catalina.session.FoundationSessionManagerValve"/>
+         <Manager className="org.apache.catalina.session.FoundationSessionManager" /> 
+    </Context>
 ```
 
-### 负载均衡配置
+### 负载均衡+session粘滞配置
+
 
 ### Session持久化
 
