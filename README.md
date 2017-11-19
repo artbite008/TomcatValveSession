@@ -11,7 +11,8 @@
 [看这里](https://github.com/artbite008/TomcatValveSession/blob/master/LoadBalancer.md)
 
 ### 配置Session持久化
-修改DBFoundationSessionStore.java文件的getDataSource方法，连接改为指向独立的远程session备份服务器上的数据库。
+1. 使用项目根目录下面的sadb.sql创建数据库和表。当然你也可以改成使用MongoDB或者Redis等非关系型数据库。
+2. 修改DBFoundationSessionStore.java文件的getDataSource方法，连接改为指向独立的远程session备份服务器上的数据库。如果使用非关系型数据库，对应在DBFoundationSessionStore.java中的一些sql也需要改一下。
 
 ### Tomcat集成
 
@@ -27,6 +28,8 @@
     </Context>
 ```
 
+### Tomcat Valve机制
+这个网上相关资料很多，请自行搜索。这里使用Valve机制主要是确保我们能在tomcat里面嵌入这样的代码：用户请求中的sessionId在当前web站点本地不存在的时候，不是由Tomcat默认机制新建一个session，而是依据这个sessionId到远程session备份服务器取下来，并恢复它。
 
 
 
